@@ -34,15 +34,15 @@ fn main() {
 
     for i in 0..100 {
         println!("hi number {} from the main thread", i);
-        let mut x: u8 = 0;
-        let mut v: Vec<u8> = vec![0x00, 0x00, 0x00, 0x00];
+        let x: u8;
+        let v: Vec<u8>;
         match i {
             0..=24 => { x = i * 10 ; v = vec![x, 0x00, 0x00, 0x00] },
             25..=49 => { x = (i - 25) * 10; v = vec![0x00, x, 0x00, 0x00] },
             50..=74 => { x = (i - 50) * 10; v = vec![0x00, 0x00, x, 0x00] },
-            _ => { x = (i - 75) * 10; v = vec![0x00, 0x00, 0x00, x] },
+            75..=98 => { x = (i - 75) * 10; v = vec![0x00, 0x00, 0x00, x] },
+            99..=u8::MAX => { v = vec![0x00, 0x00, 0x00, 0x00] },
         }
-        if i == 99 { v = vec![0x00, 0x00, 0x00, 0x00] };
         tx.send(v).unwrap();
         thread::sleep(time::Duration::from_millis(100));
     }
