@@ -31,10 +31,10 @@ fn main() {
 
 
     for i in 0..25 {
-        println!("hi number {} fro0m the main thread", i);
+        println!("hi number {} from the main thread", i);
         let x: u8 = i * 10;
-        let mut v = vec![x, 0x06];
-        if i == 24 { v = vec![0x00, 0x00] };
+        let mut v = vec![0x00, 0x00, x, 0x00];
+        //if i == 24 { v = vec![0x00, 0x00] };
         tx.send(v).unwrap();
         thread::sleep(time::Duration::from_millis(150));
     }
