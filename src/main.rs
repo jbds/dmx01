@@ -12,8 +12,10 @@ fn main() {
         let mut previous_data: Vec<u8> = vec![0x00, 0x00];
         
         // we want this thread to be sending packets for the lifetime of the app
+        let mut j = 0;
         loop {
-            println!("hi number {} from the spawned thread", "x");
+            j += 1;
+            println!("hi number {} from the spawned thread", j);
             
             match rx.try_recv() {
                 Ok(data) =>  {
@@ -30,13 +32,19 @@ fn main() {
     });
 
 
-    for i in 0..25 {
+    for i in 0..100 {
         println!("hi number {} from the main thread", i);
-        let x: u8 = i * 10;
-        let mut v = vec![0x00, 0x00, x, 0x00];
-        //if i == 24 { v = vec![0x00, 0x00] };
+        let mut x: u8 = 0;
+        let mut v: Vec<u8> = vec![0x00, 0x00, 0x00, 0x00];
+        match i {
+            0..=24 => { x = i * 10 ; v = vec![x, 0x00, 0x00, 0x00] },
+            25..=49 => { x = (i - 25) * 10; v = vec![0x00, x, 0x00, 0x00] },
+            50..=74 => { x = (i - 50) * 10; v = vec![0x00, 0x00, x, 0x00] },
+            _ => { x = (i - 75) * 10; v = vec![0x00, 0x00, 0x00, x] },
+        }
+        if i == 99 { v = vec![0x00, 0x00, 0x00, 0x00] };
         tx.send(v).unwrap();
-        thread::sleep(time::Duration::from_millis(150));
+        thread::sleep(time::Duration::from_millis(100));
     }
 
     println!("finished");
