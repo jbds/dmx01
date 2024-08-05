@@ -1,5 +1,6 @@
 use dmx::{self, DmxTransmitter};
 use std::{thread, time, sync};
+use dmx_send;
 
 fn main() {
     // data can be arbitrary number of u8 values, so use Vec<u8>
